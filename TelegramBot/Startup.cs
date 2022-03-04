@@ -17,6 +17,7 @@ using TelegramBot.Application;
 using TelegramBot.BackgroundServices;
 using TelegramBot.Commands;
 using TelegramBot.Commands.Abstractions;
+using TelegramBot.DataAccess;
 
 namespace TelegramBot
 {

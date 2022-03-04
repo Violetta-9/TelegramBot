@@ -37,6 +37,10 @@ namespace TelegramBot.BackgroundServices
             var commands = scope.ServiceProvider.GetRequiredService<IEnumerable<IBotCommand>>();
 
             var msg = e.Message;
+            if (string.IsNullOrWhiteSpace(msg.Text))
+            { 
+                await _client.SendTextMessageAsync(msg.Chat.Id, "Укажите команду ");
+            }
             if (msg.Text != null)
             {
                 var commandAlias = msg.Text.Split(" ")[0].ToUpper();
@@ -46,6 +50,11 @@ namespace TelegramBot.BackgroundServices
                 if (command != null)
                 {
                     await command.ExecuteAsync(msg);
+                }
+                else
+                {
+
+                    await _client.SendTextMessageAsync(msg.Chat.Id, "Такой команды нет");
                 }
             }
         }
