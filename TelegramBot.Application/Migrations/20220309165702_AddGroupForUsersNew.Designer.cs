@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TelegramBot.DataAccess;
@@ -9,9 +10,10 @@ using TelegramBot.DataAccess;
 namespace TelegramBot.Application.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220309165702_AddGroupForUsersNew")]
+    partial class AddGroupForUsersNew
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -88,7 +90,7 @@ namespace TelegramBot.Application.Migrations
                     b.Property<string>("City")
                         .HasColumnType("text");
 
-                    b.Property<int?>("GroupId")
+                    b.Property<int?>("GroupsId")
                         .HasColumnType("integer");
 
                     b.Property<long>("IdChat")
@@ -96,27 +98,25 @@ namespace TelegramBot.Application.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("GroupId");
+                    b.HasIndex("GroupsId");
 
                     b.ToTable("Users");
                 });
 
             modelBuilder.Entity("TelegramBot.Domain.Models.TimeTable", b =>
                 {
-                    b.HasOne("TelegramBot.Domain.Models.Group", "Group")
+                    b.HasOne("TelegramBot.Domain.Models.Group", null)
                         .WithMany("TimeTables")
                         .HasForeignKey("GroupId");
-
-                    b.Navigation("Group");
                 });
 
             modelBuilder.Entity("TelegramBot.Domain.Models.User", b =>
                 {
-                    b.HasOne("TelegramBot.Domain.Models.Group", "Group")
+                    b.HasOne("TelegramBot.Domain.Models.Group", "Groups")
                         .WithMany("Users")
-                        .HasForeignKey("GroupId");
+                        .HasForeignKey("GroupsId");
 
-                    b.Navigation("Group");
+                    b.Navigation("Groups");
                 });
 
             modelBuilder.Entity("TelegramBot.Domain.Models.Group", b =>

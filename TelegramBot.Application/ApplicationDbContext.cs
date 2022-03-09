@@ -11,7 +11,8 @@ namespace TelegramBot.DataAccess
     {
         public DbSet<TimeTable> TimeTables { get; set; }
         public DbSet<User> Users { get; set; }
-
+        public DbSet<Subscription> Subscriptions { get; set; }
+        public DbSet<Group> Groups { get; set; }
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> optionBuilder):base(optionBuilder)
         {
 

@@ -11,7 +11,8 @@ namespace TelegramBot.Domain.Models
         public string LessonsOfTheDay { get; set; }
         public DayOfWeek Week { get; set; }
         public EvenWeek EvenWeek { get; set; }
-        public string Group { get; set; }
+        public virtual Group Group { get; set; }
+
 
         public TimeTable(string lessonsOfTheDay, DayOfWeek week, EvenWeek evenWeek)
         {

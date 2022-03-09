@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TelegramBot.DataAccess;
@@ -9,30 +10,16 @@ using TelegramBot.DataAccess;
 namespace TelegramBot.Application.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220309144305_AddSubsriptionUptadeNew")]
+    partial class AddSubsriptionUptadeNew
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 63)
                 .HasAnnotation("ProductVersion", "5.0.14")
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
-
-            modelBuilder.Entity("TelegramBot.Domain.Models.Group", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
-
-                    b.Property<string>("Title")
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Groups");
-                });
 
             modelBuilder.Entity("TelegramBot.Domain.Models.Subscription", b =>
                 {
@@ -62,8 +49,8 @@ namespace TelegramBot.Application.Migrations
                     b.Property<byte>("EvenWeek")
                         .HasColumnType("smallint");
 
-                    b.Property<int?>("GroupId")
-                        .HasColumnType("integer");
+                    b.Property<string>("Group")
+                        .HasColumnType("text");
 
                     b.Property<string>("LessonsOfTheDay")
                         .HasColumnType("text");
@@ -72,8 +59,6 @@ namespace TelegramBot.Application.Migrations
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("GroupId");
 
                     b.ToTable("TimeTables");
                 });
@@ -88,41 +73,31 @@ namespace TelegramBot.Application.Migrations
                     b.Property<string>("City")
                         .HasColumnType("text");
 
-                    b.Property<int?>("GroupId")
-                        .HasColumnType("integer");
-
                     b.Property<long>("IdChat")
                         .HasColumnType("bigint");
 
+                    b.Property<string>("NameGroup")
+                        .HasColumnType("text");
+
+                    b.Property<int?>("TimeTableId")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("GroupId");
+                    b.HasIndex("TimeTableId");
 
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("TelegramBot.Domain.Models.TimeTable", b =>
-                {
-                    b.HasOne("TelegramBot.Domain.Models.Group", "Group")
-                        .WithMany("TimeTables")
-                        .HasForeignKey("GroupId");
-
-                    b.Navigation("Group");
-                });
-
             modelBuilder.Entity("TelegramBot.Domain.Models.User", b =>
                 {
-                    b.HasOne("TelegramBot.Domain.Models.Group", "Group")
+                    b.HasOne("TelegramBot.Domain.Models.TimeTable", null)
                         .WithMany("Users")
-                        .HasForeignKey("GroupId");
-
-                    b.Navigation("Group");
+                        .HasForeignKey("TimeTableId");
                 });
 
-            modelBuilder.Entity("TelegramBot.Domain.Models.Group", b =>
+            modelBuilder.Entity("TelegramBot.Domain.Models.TimeTable", b =>
                 {
-                    b.Navigation("TimeTables");
-
                     b.Navigation("Users");
                 });
 #pragma warning restore 612, 618

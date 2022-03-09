@@ -40,7 +40,8 @@ namespace TelegramBot
 
             services.AddScoped<IBotCommand, TestBotCommand>();
             services.AddScoped<IBotCommand, MenuBotCommand>();
-            //services.AddScoped<IBotCommand, Test2BotCommandNew>();
+            services.AddScoped<IBotCommand, SetGroup>();
+;            //services.AddScoped<IBotCommand, Test2BotCommandNew>();
            
             services.AddHostedService<Bot>();
             

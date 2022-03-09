@@ -9,16 +9,18 @@ namespace TelegramBot.Domain.Models
     {
         public int Id { get; set; }
         public long IdChat { get; set; }
-        public string NameGroup { get; set; }
-        public IEnumerable<TimeTable> TimeTables { get; set; }
+        public string City { get; set; }
+        public Group Group { get; set; }
+       
 
-        public User(long idChat,string nameGroup)
+        public User(long idChat, Group group, string city=default)
         {
             IdChat = idChat;
-            NameGroup = nameGroup;
+            Group = group;
+            City = city;;
         }
 
-        public User(long id)
+        public User()
         {
 
         }

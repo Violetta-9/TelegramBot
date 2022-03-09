@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using TelegramBot.Commands.Abstractions;
@@ -24,22 +25,34 @@ namespace TelegramBot.Commands
 
         public async Task ExecuteAsync(Message msg, CancellationToken cancellationToken = default)
         {
-            EvenWeek even;
-            DateTime myDateTime = DateTime.Now;
-            int firstDayOfYear = (int)new DateTime(myDateTime.Year, 1, 1).DayOfWeek;
-            int weekNumber = (myDateTime.DayOfYear + firstDayOfYear) / 7 + 1;
-            if (weekNumber % 2 == 0)
+
+            var chac = _db.Users.Where(x => x.IdChat == msg.Chat.Id).Where(x=>x.Group!=null).FirstOrDefault();
+
+            if (chac is Domain.Models.User)
             {
-                 even = EvenWeek.Even;
+                EvenWeek even;
+                DateTime myDateTime = DateTime.Now;
+                int firstDayOfYear = (int)new DateTime(myDateTime.Year, 1, 1).DayOfWeek;
+                int weekNumber = (myDateTime.DayOfYear + firstDayOfYear) / 7 + 1;
+                if (weekNumber % 2 == 0)
+                {
+                    even = EvenWeek.Even;
+                }
+                else
+                {
+                    even = EvenWeek.Even;
+                }
+                var dayOfWeekNow = myDateTime.DayOfWeek;
+
+                var timeTableTry = _db.TimeTables.Where(x => x.Week == dayOfWeekNow).Where(x => x.EvenWeek == even)
+                    .Where(x =>x.Group.Equals(chac.Group)).ToArray();
+                await _client.SendTextMessageAsync(msg.Chat.Id, timeTableTry[0].LessonsOfTheDay);
             }
             else
             {
-                even = EvenWeek.Even;
+                await _client.SendTextMessageAsync(msg.Chat.Id, "Установите группу: setgroup + ваша группа");
             }
-            var dayOfWeekNow = myDateTime.DayOfWeek;
-            
-            var timeTableTry = _db.TimeTables.Where(x=>x.Week==dayOfWeekNow).Where(x=>x.EvenWeek==even).ToArray();
-            await _client.SendTextMessageAsync(msg.Chat.Id, timeTableTry[0].LessonsOfTheDay);
+
         }
     }
 }
