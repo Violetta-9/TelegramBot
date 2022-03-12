@@ -10,10 +10,11 @@ using Telegram.Bot;
 using Telegram.Bot.Args;
 using Telegram.Bot.Types;
 using TelegramBot.Commands.Abstractions;
-using TelegramBot.DataAccess;
+
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
 using TelegramBot.Domain.Models;
+using Telegram.DataAccess;
 
 namespace TelegramBot.Commands
 {
@@ -41,6 +42,10 @@ namespace TelegramBot.Commands
                 await _db.SaveChangesAsync(cancellationToken);
                 await _client.SendTextMessageAsync(msg.Chat.Id, "Группа успешно установленна");
 
+            }
+            else
+            {
+                await _client.SendTextMessageAsync(msg.Chat.Id, $"группа {group} не найдена ");
             }
 
 
