@@ -1,23 +1,21 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Serilog;
+using Telegram.Application;
+using Telegram.Application.Contracts;
 using Telegram.Bot;
-using TelegramBot.Application;
+using Telegram.DataAccess;
 using TelegramBot.BackgroundServices;
 using TelegramBot.Commands;
 using TelegramBot.Commands.Abstractions;
-using TelegramBot.DataAccess;
+
 
 namespace TelegramBot
 {
@@ -41,13 +39,17 @@ namespace TelegramBot
             services.AddScoped<IBotCommand, TestBotCommand>();
             services.AddScoped<IBotCommand, MenuBotCommand>();
             services.AddScoped<IBotCommand, SetGroup>();
+            services.AddScoped<IBotCommand, SetCity>();
+            services.AddScoped<IBotCommand, WeatherCommand>();
+            services.AddApplication();
 ;            //services.AddScoped<IBotCommand, Test2BotCommandNew>();
            
             services.AddHostedService<Bot>();
             
             services.AddSingleton<TelegramBotClient>(new TelegramBotClient(Configuration.GetSection("Telegram:Token").Get<string>()));
-           
-            
+
+            services.Configure<Settings>(Configuration.GetSection(nameof(Settings)));
+
 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseNpgsql(Configuration.GetSection("ConnectionString:DefaultConnection").Get<string>()));
