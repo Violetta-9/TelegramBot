@@ -10,7 +10,7 @@ namespace TelegramBot.Domain.Models
         public int Id { get; set; }
         public long IdChat { get; set; }
         public string City { get; set; }
-        public Group Group { get; set; }
+        public virtual Group Group { get; set; }
        
 
         public User(long idChat, Group group, string city=default)

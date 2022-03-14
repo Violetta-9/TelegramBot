@@ -18,12 +18,12 @@ namespace TelegramBot.Commands
 {
     public class SetCity : IBotCommand
     {
-        public string[] Alias { get; set; } = new[] {"SETCITY"};
+        public string[] Alias { get; set; } = new[] { "SETCITY" };
         private readonly ApplicationDbContext _db;
         private readonly TelegramBotClient _client;
         private readonly IMediator _mediator;
 
-        public SetCity(ApplicationDbContext db,TelegramBotClient client,IMediator mediator)
+        public SetCity(ApplicationDbContext db, TelegramBotClient client, IMediator mediator)
         {
             _db = db;
             _client = client;
@@ -33,24 +33,25 @@ namespace TelegramBot.Commands
         public async Task ExecuteAsync(Message msg, CancellationToken cancellationToken = default)
         {
             var city = msg.Text.Split(" ")[1].ToUpper();
-           var checkCity= await _mediator.Send(new GetCity(city));// todo: проверка города на существования 
-           if (checkCity is CityInfo)
-           {
-               var user = _db.Users.Where(x => x.IdChat == msg.Chat.Id).FirstOrDefault();
-              
-                if (user!=null)
-               {
-                   user.City = city;
-
-                   await _db.SaveChangesAsync(cancellationToken);
-                   await _client.SendTextMessageAsync(msg.Chat.Id, "Город установлен");
-               }
-            }
-           else
-           {
-               await _client.SendTextMessageAsync(msg.Chat.Id,$"{city.Substring(0,1).ToUpper()+city.Substring(1, city.Length-1).ToLower()} не существует");
-           }
+            var checkCity = await _mediator.Send(new GetCity(city));// todo: проверка города на существования 
             
+            if (checkCity != null)
+            {
+                var user = _db.Users.FirstOrDefault(x => x.IdChat == msg.Chat.Id);
+
+                if (user != null)
+                {
+                    user.City = city;
+
+                    await _db.SaveChangesAsync(cancellationToken);
+                    await _client.SendTextMessageAsync(msg.Chat.Id, "Город установлен", cancellationToken: cancellationToken);
+                }
+            }
+            else
+            {
+                await _client.SendTextMessageAsync(msg.Chat.Id, $"{city.Substring(0, 1).ToUpper() + city.Substring(1, city.Length - 1).ToLower()} не существует", cancellationToken: cancellationToken);
+            }
+
         }
     }
 }

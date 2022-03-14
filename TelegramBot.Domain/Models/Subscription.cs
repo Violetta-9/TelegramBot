@@ -9,6 +9,7 @@ namespace TelegramBot.Domain.Models
         public int Id { get; set; }
         public int UserId { get; set; }
         public SubscriptionItem SubscriptionItem { get; set; }
+        public virtual User User { get; set; }
 
     }
 

@@ -26,10 +26,9 @@ namespace TelegramBot.Commands
 
         public async Task ExecuteAsync(Message msg, CancellationToken cancellationToken = default)
         {
+            var chac = _db.Users.Include(x=>x.Group).Where(x => x.IdChat == msg.Chat.Id).Where(x=>x.Group!=null).FirstOrDefault();
 
-            var chac = _db.Users.Where(x => x.IdChat == msg.Chat.Id).Where(x=>x.Group!=null).FirstOrDefault();
-
-            if (chac is Domain.Models.User)
+            if (chac !=null)
             {
                 EvenWeek even;
                 DateTime myDateTime = DateTime.Now;
@@ -46,12 +45,19 @@ namespace TelegramBot.Commands
                 var dayOfWeekNow = myDateTime.DayOfWeek;
 
                 var timeTableTry = _db.TimeTables.Where(x => x.Week == dayOfWeekNow).Where(x => x.EvenWeek == even)
-                    .Where(x =>x.Group.Equals(chac.Group)).ToArray();
-                await _client.SendTextMessageAsync(msg.Chat.Id, timeTableTry[0].LessonsOfTheDay);
+                    .Where(x =>x.Group.Id==chac.Group.Id).ToArray();
+
+                if (!timeTableTry.Any())
+                {
+                    await _client.SendTextMessageAsync(msg.Chat.Id,"Сегодня выходной!", cancellationToken: cancellationToken);
+                    return;
+                }
+
+                await _client.SendTextMessageAsync(msg.Chat.Id, timeTableTry[0].LessonsOfTheDay, cancellationToken: cancellationToken);
             }
             else
             {
-                await _client.SendTextMessageAsync(msg.Chat.Id, "Установите группу: setgroup + ваша группа");
+                await _client.SendTextMessageAsync(msg.Chat.Id, "Установите группу: setgroup + ваша группа", cancellationToken: cancellationToken);
             }
 
         }
