@@ -30,7 +30,7 @@ namespace Telegram.Application.QueryHandlers
                     new Uri($"http://open.mapquestapi.com/geocoding/v1/address?key={_token}&location={request.Name}"),
                 Method = HttpMethod.Get
             };
-            using (var response = await client.SendAsync(requstForCity))
+            using (var response = await client.SendAsync(requstForCity, cancellationToken))
             {
                 response.EnsureSuccessStatusCode();
                 var cityInfo = await response.Content.ReadAsStringAsync();

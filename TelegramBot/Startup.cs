@@ -100,7 +100,9 @@ namespace TelegramBot
         private void ConfigureJobs()
         {
             RecurringJob.AddOrUpdate<ScheduledTask.ScheduledTask>("SendTimeTable", x => x.SendTimeTable(),
-                "45 23 * * *", TimeZoneInfo.Local);
+                "14 19 * * *", TimeZoneInfo.Local);
+            RecurringJob.AddOrUpdate<ScheduledTask.ScheduledTask>("SendWeather", x => x.SendWeather(),
+                "13 19 * * *", TimeZoneInfo.Local);
         }
     }
 }

@@ -33,9 +33,9 @@ namespace TelegramBot.Commands
             var check = _db.Users.Where(x => x.IdChat == msg.Chat.Id).Where(x => x.City != null).FirstOrDefault();
             if (check!=null)
             {
-                var cityLocation=await _mediator.Send(new GetCity(check.City));
+                var cityLocation=await _mediator.Send(new GetCity(check.City), cancellationToken);
                 var weather = await _mediator.Send(new GetWeather(cityLocation.Results[0].Locations[1].LatLng.Lat,
-                    cityLocation.Results[0].Locations[1].LatLng.Lng));
+                    cityLocation.Results[0].Locations[1].LatLng.Lng), cancellationToken);
 
                 await _client.SendTextMessageAsync(msg.Chat.Id, $"Погода в городе {check.City.Substring(0,1).ToUpper()+check.City.Substring(1, check.City.Length-1).ToLower()}\n ( {DateTime.Now.ToString("dddd, d MMMM ", CultureInfo.GetCultureInfo("ru-ru"))}):\n" +
                                                                 $"\n" +
@@ -48,13 +48,13 @@ namespace TelegramBot.Commands
                                                                 $"Влажность: { weather.Daily[0].Humidity} %\n" +
                                                                 $"Облачность: {weather.Daily[0].Clouds} %\n" +
                                                                 $"Давление: {weather.Daily[0].Pressure} мм.рт.ст.\n" +
-                                                                $"Ветер: {weather.Daily[0].WindSpeed} м/с");
+                                                                $"Ветер: {weather.Daily[0].WindSpeed} м/с", cancellationToken: cancellationToken);
 
 
             }
             else
             {
-                await _client.SendTextMessageAsync(msg.Chat.Id, "Установите город: setcity + ваш город");
+                await _client.SendTextMessageAsync(msg.Chat.Id, "Установите город: setcity + ваш город", cancellationToken: cancellationToken);
             }
         }
     }
