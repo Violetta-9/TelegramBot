@@ -37,6 +37,9 @@ namespace TelegramBot
             services.AddScoped<IBotCommand, SetGroup>();
             services.AddScoped<IBotCommand, SetCity>();
             services.AddScoped<IBotCommand, WeatherCommand>();
+            services.AddScoped<IBotCommand, SubscriptionWeather>();
+            services.AddScoped<IBotCommand, StartCommand>();
+            services.AddScoped<IBotCommand, SubscriptionTimeTable>();
             services.AddApplication();
 ;            //services.AddScoped<IBotCommand, Test2BotCommandNew>();
            
