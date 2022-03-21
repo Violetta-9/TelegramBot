@@ -8,5 +8,6 @@ namespace Telegram.Application.Contracts
     {
         public string CityToken { get; set; }
         public string WeatherToken { get; set; }
+        public string AdminId { get; set; }
     }
 }

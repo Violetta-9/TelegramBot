@@ -10,5 +10,10 @@ namespace TelegramBot.Domain.Models
         public string Title { get; set; }
         public virtual IEnumerable<User> Users { get; set; }
         public virtual IEnumerable<TimeTable> TimeTables { get; set; }
+
+        public Group(string title)
+        {
+            Title = title;
+        }
     }
 }

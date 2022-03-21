@@ -14,6 +14,9 @@ using Telegram.DataAccess;
 using TelegramBot.BackgroundServices;
 using TelegramBot.Commands;
 using TelegramBot.Commands.Abstractions;
+using TelegramBot.Commands.AdminCommands;
+using TelegramBot.Commands.AdminCommands.Group;
+using TelegramBot.Commands.AdminCommands.TimeTable;
 
 
 namespace TelegramBot
@@ -30,6 +33,7 @@ namespace TelegramBot
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+         
             services.AddControllers();
 
             services.AddScoped<IBotCommand, TestBotCommand>();
@@ -40,6 +44,19 @@ namespace TelegramBot
             services.AddScoped<IBotCommand, SubscriptionWeather>();
             services.AddScoped<IBotCommand, StartCommand>();
             services.AddScoped<IBotCommand, SubscriptionTimeTable>();
+            services.AddScoped<IBotCommand, AdminCommand>();
+            services.AddScoped<IBotCommand, AddTimeTable>();
+            services.AddScoped<IBotCommand, ViewCommand>();
+            services.AddScoped<IBotCommand, DeleteCommand>();
+            services.AddScoped<IBotCommand, EditCommand>();
+
+            services.AddScoped<IBotCommand, AddGroup>();
+            services.AddScoped<IBotCommand, ViewGroup>();
+            services.AddScoped<IBotCommand, DeleteGroup>();
+            services.AddScoped<IBotCommand, EditGroup>();
+            
+
+
             services.AddApplication();
 ;            //services.AddScoped<IBotCommand, Test2BotCommandNew>();
            
