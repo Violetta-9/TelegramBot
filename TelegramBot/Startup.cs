@@ -17,6 +17,7 @@ using TelegramBot.Commands.Abstractions;
 using TelegramBot.Commands.AdminCommands;
 using TelegramBot.Commands.AdminCommands.Group;
 using TelegramBot.Commands.AdminCommands.TimeTable;
+using TelegramBot.HostedServices;
 
 
 namespace TelegramBot
@@ -61,6 +62,7 @@ namespace TelegramBot
 ;            //services.AddScoped<IBotCommand, Test2BotCommandNew>();
            
             services.AddHostedService<Bot>();
+            services.AddHostedService<MigrationHostedService>();
             
             services.AddSingleton<TelegramBotClient>(new TelegramBotClient(Configuration.GetSection("Telegram:Token").Get<string>()));
 
