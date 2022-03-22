@@ -34,7 +34,9 @@ namespace TelegramBot
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-         
+            services.AddHostedService<Bot>();
+            services.AddHostedService<MigrationHostedService>();
+
             services.AddControllers();
 
             services.AddScoped<IBotCommand, TestBotCommand>();
@@ -61,8 +63,7 @@ namespace TelegramBot
             services.AddApplication();
 ;            //services.AddScoped<IBotCommand, Test2BotCommandNew>();
            
-            services.AddHostedService<Bot>();
-            services.AddHostedService<MigrationHostedService>();
+         
             
             services.AddSingleton<TelegramBotClient>(new TelegramBotClient(Configuration.GetSection("Telegram:Token").Get<string>()));
 
