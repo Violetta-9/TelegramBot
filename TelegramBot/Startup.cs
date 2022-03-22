@@ -1,5 +1,6 @@
 using System;
 using Hangfire;
+using Hangfire.MemoryStorage;
 using Hangfire.PostgreSql;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -33,8 +34,7 @@ namespace TelegramBot
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
-        {
-            services.AddHostedService<MigrationHostedService>();
+        {  services.AddHostedService<MigrationHostedService>();
             services.AddHostedService<Bot>();
           
 
@@ -74,20 +74,14 @@ namespace TelegramBot
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseNpgsql(Configuration.GetSection("ConnectionString:DefaultConnection").Get<string>()));
             // services.AddHangfire(x => x.UsePostgreSqlStorage(Configuration.GetSection("ConnectionString:DefaultConnection").Get<string>()));
-            services.AddHangfire(configuration => configuration
-                .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
-                .UseSimpleAssemblyNameTypeSerializer()
-                .UseRecommendedSerializerSettings()
-                .UsePostgreSqlStorage(Configuration.GetSection("ConnectionString:DefaultConnection").Get<string>(), new PostgreSqlStorageOptions()
-                {
-                    
-                    InvisibilityTimeout = TimeSpan.FromMinutes(5),
-                    DistributedLockTimeout = TimeSpan.FromMinutes(5),
-                    
-                    UseNativeDatabaseTransactions = true,
-                    PrepareSchemaIfNecessary = true
-
-        }));
+            services.AddHangfire(config => config.UseMemoryStorage());
+            services.Scan(scan =>
+            {
+                scan.FromAssembliesOf(typeof(StartCommand).GetType())
+                    .AddClasses(classes => classes.AssignableTo(typeof(IBotCommand)))
+                    .AsImplementedInterfaces()
+                    .WithScopedLifetime();
+            });
 
             // Add the processing server as IHostedService
             services.AddHangfireServer();

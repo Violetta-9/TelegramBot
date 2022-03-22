@@ -10,8 +10,8 @@ using Telegram.DataAccess;
 namespace Telegram.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220314165247_UserForSubscripter")]
-    partial class UserForSubscripter
+    [Migration("20220322201834_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -50,6 +50,8 @@ namespace Telegram.DataAccess.Migrations
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Subscriptions");
                 });
@@ -96,16 +98,22 @@ namespace Telegram.DataAccess.Migrations
                     b.Property<long>("IdChat")
                         .HasColumnType("bigint");
 
-                    b.Property<int?>("SubscriptionId")
-                        .HasColumnType("integer");
-
                     b.HasKey("Id");
 
                     b.HasIndex("GroupId");
 
-                    b.HasIndex("SubscriptionId");
-
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("TelegramBot.Domain.Models.Subscription", b =>
+                {
+                    b.HasOne("TelegramBot.Domain.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("TelegramBot.Domain.Models.TimeTable", b =>
@@ -123,10 +131,6 @@ namespace Telegram.DataAccess.Migrations
                         .WithMany("Users")
                         .HasForeignKey("GroupId");
 
-                    b.HasOne("TelegramBot.Domain.Models.Subscription", null)
-                        .WithMany("Users")
-                        .HasForeignKey("SubscriptionId");
-
                     b.Navigation("Group");
                 });
 
@@ -134,11 +138,6 @@ namespace Telegram.DataAccess.Migrations
                 {
                     b.Navigation("TimeTables");
 
-                    b.Navigation("Users");
-                });
-
-            modelBuilder.Entity("TelegramBot.Domain.Models.Subscription", b =>
-                {
                     b.Navigation("Users");
                 });
 #pragma warning restore 612, 618
