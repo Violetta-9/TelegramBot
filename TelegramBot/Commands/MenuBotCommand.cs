@@ -40,7 +40,7 @@ namespace TelegramBot.Commands
                 }
                 else
                 {
-                    even = EvenWeek.Even;
+                    even = EvenWeek.NotEven;
                 }
                 var dayOfWeekNow = myDateTime.DayOfWeek;
 
