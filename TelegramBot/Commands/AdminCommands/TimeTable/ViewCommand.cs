@@ -33,7 +33,7 @@ namespace TelegramBot.Commands.AdminCommands.TimeTable
             string str = "";
             if (strArray.Length == 2)
             {
-
+               
                 timetableArray= _db.TimeTables.Include(x => x.Group).Where(x => x.Group.Id == group.Id).ToArray();
             }
             else
@@ -62,6 +62,12 @@ namespace TelegramBot.Commands.AdminCommands.TimeTable
                 }
                timetableArray=  _db.TimeTables.Include(x => x.Group).Where(x => x.Group.Id == group.Id).Where(x=>x.Week==day).ToArray();
                
+            }
+
+            if (timetableArray.Length==0)
+            {
+                await _client.SendTextMessageAsync(msg.Chat.Id, "Расписание этой группы отсутствует", cancellationToken: cancellationToken);
+                return;
             }
             foreach (var item in timetableArray)
             {

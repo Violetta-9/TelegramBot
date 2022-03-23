@@ -24,23 +24,25 @@ namespace TelegramBot.Commands.AdminCommands.TimeTable
 
         public async Task ExecuteAsync(Message msg, CancellationToken cancellationToken = default)
         {
-            char[] separators = {' ', '|'};
-            var strArray = msg.Text.Split(separators, StringSplitOptions.RemoveEmptyEntries);
-            var group = _db.Groups.FirstOrDefault(x => x.Title == strArray[4].ToUpper());
+            var text = msg.Text.Trim();
+            var textWhithOutCommand = text.Remove(0, 3);
+            char[] separators = {'|'};
+            var strArray = textWhithOutCommand.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+            var group = _db.Groups.FirstOrDefault(x => x.Title == strArray[3].ToUpper());
             if (group != null)
             {
                 EvenWeek even;
                 DayOfWeek day = 0;
-                if (Convert.ToInt32(strArray[3]) == 1)
+                if (Convert.ToInt32(strArray[2]) == 1)
                 {
                     even = EvenWeek.Even;
                 }
                 else
                 {
-                    even = EvenWeek.Even;
+                    even = EvenWeek.NotEven;
                 }
 
-                switch (strArray[2])
+                switch (strArray[1])
                 {
                     case "1":
                         day = DayOfWeek.Monday;
@@ -63,10 +65,15 @@ namespace TelegramBot.Commands.AdminCommands.TimeTable
                         break;
                 }
 
-                var newTimeTable = new Domain.Models.TimeTable(strArray[1], day, even, group);
+                var newTimeTable = new Domain.Models.TimeTable(strArray[0], day, even, group);
                 _db.TimeTables.Add(newTimeTable);
                 await _db.SaveChangesAsync(cancellationToken);
                 await _client.SendTextMessageAsync(msg.Chat.Id, "Запись успешно добавленна",
+                    cancellationToken: cancellationToken);
+            }
+            else
+            {
+                await _client.SendTextMessageAsync(msg.Chat.Id, "Такой группы нет",
                     cancellationToken: cancellationToken);
             }
         }

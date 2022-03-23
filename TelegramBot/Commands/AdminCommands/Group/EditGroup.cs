@@ -27,11 +27,17 @@ namespace TelegramBot.Commands.AdminCommands.Group
         {
             char[] separators = {' ', '|'};
             var strArray = msg.Text.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+            if (strArray.Length != 3)
+            {
+                await _client.SendTextMessageAsync(msg.Chat.Id, "неправильный формат",
+                    cancellationToken: cancellationToken);
+                return;
+            }
             var group = _db.Groups.FirstOrDefault(x => x.Id == Convert.ToInt32(strArray[1]));
 
             if (group != null)
             {
-                group.Title = strArray[2];
+                group.Title = strArray[2].ToUpper();
                 await _db.SaveChangesAsync(cancellationToken);
                 await _client.SendTextMessageAsync(msg.Chat.Id, "Успешно обнавленно", cancellationToken: cancellationToken);
 

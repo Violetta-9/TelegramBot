@@ -23,10 +23,12 @@ namespace TelegramBot.Commands.AdminCommands.TimeTable{
 
         public async Task ExecuteAsync(Message msg, CancellationToken cancellationToken = default)
         {
-            char[] separators = { ' ', '|' };
-            var strArray = msg.Text.Split(separators, StringSplitOptions.RemoveEmptyEntries);
-            var group = _db.Groups.FirstOrDefault(x => x.Title == strArray[5].ToUpper());
-            var currentTimeTable=_db.TimeTables.FirstOrDefault(x => x.Id == Convert.ToInt32(strArray[1]));
+            var text = msg.Text.Trim();
+            var textWhithOutCommand = text.Remove(0, 5);
+            char[] separators = { '|' };
+            var strArray = textWhithOutCommand.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+            var group = _db.Groups.FirstOrDefault(x => x.Title == strArray[4].ToUpper());
+            var currentTimeTable=_db.TimeTables.FirstOrDefault(x => x.Id == Convert.ToInt32(strArray[0]));
             if (currentTimeTable != null)
             {
                 EvenWeek even;
@@ -37,10 +39,10 @@ namespace TelegramBot.Commands.AdminCommands.TimeTable{
                 }
                 else
                 {
-                    even = EvenWeek.Even;
+                    even = EvenWeek.NotEven;
                 }
 
-                switch (strArray[3])
+                switch (strArray[2])
                 {
                     case "1":
                         day = DayOfWeek.Monday;
@@ -61,7 +63,7 @@ namespace TelegramBot.Commands.AdminCommands.TimeTable{
                         await _client.SendTextMessageAsync(msg.Chat.Id, "не правильный формат дня недели", cancellationToken: cancellationToken);
                         break;
                 }
-                currentTimeTable.LessonsOfTheDay = strArray[2];
+                currentTimeTable.LessonsOfTheDay = strArray[1];
                 currentTimeTable.Week = day;
                 currentTimeTable.EvenWeek = even;
                 currentTimeTable.Group = group;

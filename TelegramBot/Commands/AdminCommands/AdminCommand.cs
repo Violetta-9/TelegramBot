@@ -27,7 +27,8 @@ namespace TelegramBot.Commands
         {
             if (msg.Chat.Id == Convert.ToInt32(_str))
             {
-                await _client.SendTextMessageAsync(msg.Chat.Id, "Команды:\n   add  расписание со временим | день недели | четность  | группа \n_________\n День недели:\n1-пн\n2-вт\n3-ср\n4-чт\n5-пт\n _________\n Четность:\n1-четная \n2-нечетная\n\n   view  группа (view | группа | день недели)\n\n   delete  Id записи\n\n   edit  Id записи | новое расписание | день недели | четность | группа", cancellationToken: cancellationToken);
+                await _client.SendTextMessageAsync(msg.Chat.Id, "Команды:\n   add расписание со временим|день недели|четность|группа -->(без пробелов перед и после |) \n_________\n День недели:\n1-пн\n2-вт\n3-ср\n4-чт\n5-пт\n _________\n Четность:\n1-четная \n2-нечетная\n\n   view  группа (view  группа | день недели)\n\n   delete  Id записи\n\n   edit  Id записи|новое расписание|день недели|четность|группа -->(без пробелов перед и после |)\n\n addgroup  название группы \n\n" +
+                                                                "deletegroup  Id записи \n\n viewgroup\n\n editgroup | Id записи | новое название группы ", cancellationToken: cancellationToken);
                 return;
 
             }

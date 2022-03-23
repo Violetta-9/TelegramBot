@@ -35,7 +35,7 @@ namespace TelegramBot.Commands
 
 
             var chec = _db.Groups.Where(x => x.Title.Equals(group)).FirstOrDefault();
-            if (chec is Group)
+            if (chec != null)
             {
                 var user = new Domain.Models.User(msg.Chat.Id, chec);
                 await _db.Users.AddAsync(user);
