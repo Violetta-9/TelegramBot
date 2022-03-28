@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Security.Cryptography.X509Certificates;
+﻿using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using Telegram.Application.Contracts;
 using Telegram.Application.Queries;
 using Telegram.Bot;
 using Telegram.Bot.Types;
@@ -33,7 +28,7 @@ namespace TelegramBot.Commands
         public async Task ExecuteAsync(Message msg, CancellationToken cancellationToken = default)
         {
             var city = msg.Text.Split(" ")[1].ToUpper();
-            var checkCity = await _mediator.Send(new GetCity(city));// todo: проверка города на существования 
+            var checkCity = await _mediator.Send(new GetCity(city), cancellationToken);// todo: проверка города на существования 
             
             if (checkCity != null)
             {

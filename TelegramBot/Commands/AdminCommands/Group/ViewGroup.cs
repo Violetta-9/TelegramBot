@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.DataAccess;
 using TelegramBot.Commands.Abstractions;
-using TelegramBot.Domain.Models;
 
 namespace TelegramBot.Commands.AdminCommands.Group
 {

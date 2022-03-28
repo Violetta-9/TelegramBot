@@ -1,19 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Metadata.Ecma335;
+﻿using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.ApiExplorer;
-using Microsoft.EntityFrameworkCore.Diagnostics;
 using Telegram.Bot;
-using Telegram.Bot.Args;
 using Telegram.Bot.Types;
 using TelegramBot.Commands.Abstractions;
-
-using Telegram.Bot.Types.Enums;
-using Telegram.Bot.Types.ReplyMarkups;
-using TelegramBot.Domain.Models;
 using Telegram.DataAccess;
 
 namespace TelegramBot.Commands
@@ -34,18 +24,18 @@ namespace TelegramBot.Commands
             var group = msg.Text.Split(" ")[1].ToUpper();
 
 
-            var chec = _db.Groups.Where(x => x.Title.Equals(group)).FirstOrDefault();
+            var chec = _db.Groups.FirstOrDefault(x => x.Title.Equals(@group));
             if (chec != null)
             {
                 var user = new Domain.Models.User(msg.Chat.Id, chec);
-                await _db.Users.AddAsync(user);
+                await _db.Users.AddAsync(user, cancellationToken);
                 await _db.SaveChangesAsync(cancellationToken);
-                await _client.SendTextMessageAsync(msg.Chat.Id, "Группа успешно установленна");
+                await _client.SendTextMessageAsync(msg.Chat.Id, "Группа успешно установленна", cancellationToken: cancellationToken);
 
             }
             else
             {
-                await _client.SendTextMessageAsync(msg.Chat.Id, $"группа {group} не найдена ");
+                await _client.SendTextMessageAsync(msg.Chat.Id, $"группа {group} не найдена ", cancellationToken: cancellationToken);
             }
 
 

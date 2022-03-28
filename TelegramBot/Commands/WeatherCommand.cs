@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using Telegram.Application.Contracts;
 using Telegram.Application.Queries;
 using Telegram.Bot;
 using Telegram.Bot.Types;
@@ -30,7 +28,7 @@ namespace TelegramBot.Commands
 
         public async Task ExecuteAsync(Message msg, CancellationToken cancellationToken = default)
         {
-            var check = _db.Users.Where(x => x.IdChat == msg.Chat.Id).Where(x => x.City != null).FirstOrDefault();
+            var check = _db.Users.Where(x => x.IdChat == msg.Chat.Id).FirstOrDefault(x => x.City != null);
             if (check!=null)
             {
                 var cityLocation=await _mediator.Send(new GetCity(check.City), cancellationToken);
