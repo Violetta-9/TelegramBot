@@ -1,7 +1,6 @@
 using System;
 using Hangfire;
 using Hangfire.MemoryStorage;
-using Hangfire.PostgreSql;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -15,9 +14,6 @@ using Telegram.DataAccess;
 using TelegramBot.BackgroundServices;
 using TelegramBot.Commands;
 using TelegramBot.Commands.Abstractions;
-using TelegramBot.Commands.AdminCommands;
-using TelegramBot.Commands.AdminCommands.Group;
-using TelegramBot.Commands.AdminCommands.TimeTable;
 using TelegramBot.HostedServices;
 
 
@@ -35,34 +31,12 @@ namespace TelegramBot
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {  services.AddHostedService<MigrationHostedService>();
-            services.AddHostedService<Bot>();
-          
+services.AddHostedService<Bot>();
+                      
 
             services.AddControllers();
-
-            services.AddScoped<IBotCommand, TestBotCommand>();
-            services.AddScoped<IBotCommand, MenuBotCommand>();
-            services.AddScoped<IBotCommand, SetGroup>();
-            services.AddScoped<IBotCommand, SetCity>();
-            services.AddScoped<IBotCommand, WeatherCommand>();
-            services.AddScoped<IBotCommand, SubscriptionWeather>();
-            services.AddScoped<IBotCommand, StartCommand>();
-            services.AddScoped<IBotCommand, SubscriptionTimeTable>();
-            services.AddScoped<IBotCommand, AdminCommand>();
-            services.AddScoped<IBotCommand, AddTimeTable>();
-            services.AddScoped<IBotCommand, ViewCommand>();
-            services.AddScoped<IBotCommand, DeleteCommand>();
-            services.AddScoped<IBotCommand, EditCommand>();
-
-            services.AddScoped<IBotCommand, AddGroup>();
-            services.AddScoped<IBotCommand, ViewGroup>();
-            services.AddScoped<IBotCommand, DeleteGroup>();
-            services.AddScoped<IBotCommand, EditGroup>();
-            
-
-
             services.AddApplication();
-;            //services.AddScoped<IBotCommand, Test2BotCommandNew>();
+;         
            
          
             
@@ -73,11 +47,11 @@ namespace TelegramBot
 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseNpgsql(Configuration.GetSection("ConnectionString:DefaultConnection").Get<string>()));
-            // services.AddHangfire(x => x.UsePostgreSqlStorage(Configuration.GetSection("ConnectionString:DefaultConnection").Get<string>()));
+          
             services.AddHangfire(config => config.UseMemoryStorage());
             services.Scan(scan =>
             {
-                scan.FromAssembliesOf(typeof(StartCommand).GetType())
+                scan.FromAssembliesOf(typeof(StartCommand))
                     .AddClasses(classes => classes.AssignableTo(typeof(IBotCommand)))
                     .AsImplementedInterfaces()
                     .WithScopedLifetime();
